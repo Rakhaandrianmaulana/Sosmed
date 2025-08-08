@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sosial Media Modern</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons for icons (FIXED) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Style for the main reels container to snap on scroll */
+        .reels-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+        .reel-item {
+            scroll-snap-align: start;
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-100 to-white overflow-hidden font-sans">
+
+    <!-- Main Application Wrapper -->
+    <div id="app-wrapper" class="flex h-screen w-screen">
+
+        <!-- ===== Left Navigation Bar ===== -->
+        <nav id="main-nav" class="hidden md:flex flex-col justify-between w-64 bg-white/50 backdrop-blur-lg border-r border-gray-200 p-4">
+            <div>
+                <!-- Logo -->
+                <div class="flex items-center gap-3 mb-10">
+                    <i data-lucide="gem" class="text-blue-600"></i>
+                    <h1 class="text-2xl font-bold text-gray-800">Sosmed</h1>
+                </div>
+                <!-- Navigation Links -->
+                <ul class="space-y-2">
+                    <li><a href="#" class="flex items-center gap-4 p-3 rounded-lg text-gray-700 font-semibold bg-blue-100"><i data-lucide="home"></i> Home</a></li>
+                    <li><a href="#" id="nav-chat-btn" class="flex items-center gap-4 p-3 rounded-lg text-gray-700 hover:bg-gray-200"><i data-lucide="message-circle"></i> Chat</a></li>
+                    <li><a href="#" id="nav-upload-btn" class="flex items-center gap-4 p-3 rounded-lg text-gray-700 hover:bg-gray-200"><i data-lucide="upload"></i> Upload</a></li>
+                    <li><a href="#" id="nav-profile-btn" class="flex items-center gap-4 p-3 rounded-lg text-gray-700 hover:bg-gray-200"><i data-lucide="user"></i> Profile</a></li>
+                </ul>
+            </div>
+            <!-- User Profile & Logout -->
+            <div id="user-session-ui" class="hidden">
+                 <div class="flex items-center gap-3 border-t pt-4">
+                    <img id="nav-user-avatar" src="https://placehold.co/40x40/E2E8F0/4A5568?text=U" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <p id="nav-username" class="font-semibold text-sm">username</p>
+                        <button id="logout-btn" class="text-xs text-red-500 hover:underline">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ===== Main Content: Reels (FYP) ===== -->
+        <main class="flex-1 flex justify-center items-center">
+            <div id="reels-container" class="reels-container w-full md:max-w-md relative">
+                <!-- Reels will be injected here by JavaScript -->
+            </div>
+        </main>
+
+        <!-- ===== Chat Sidebar (Initially Hidden) ===== -->
+        <aside id="chat-sidebar" class="hidden w-80 bg-white/70 backdrop-blur-lg border-l border-gray-200 flex-col">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h2 class="font-bold text-lg">Chats</h2>
+                <button id="close-chat-btn"><i data-lucide="x"></i></button>
+            </div>
+            <div id="chat-list" class="flex-1 overflow-y-auto p-2">
+                <!-- Chat user list will be injected here -->
+            </div>
+            <div id="chat-conversation" class="hidden flex-col h-full">
+                 <div class="p-3 border-b flex items-center gap-3">
+                    <button id="back-to-chat-list-btn"><i data-lucide="arrow-left"></i></button>
+                    <img id="chat-with-avatar" src="https://placehold.co/40x40" class="w-10 h-10 rounded-full">
+                    <p id="chat-with-username" class="font-semibold">User Lain</p>
+                </div>
+                <div id="messages-container" class="flex-1 p-4 overflow-y-auto">
+                    <!-- Messages will be injected here -->
+                </div>
+                <div class="p-2 border-t">
+                    <form id="send-message-form" class="flex gap-2">
+                        <input type="text" id="message-input" placeholder="Ketik pesan..." class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        <button type="submit" class="bg-blue-500 text-white p-2 rounded-lg"><i data-lucide="send"></i></button>
+                    </form>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- ===== Modals ===== -->
+
+    <!-- Login/Register Modal Container -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm">
+            <!-- Login Form -->
+            <form id="login-form">
+                <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
+                <div class="mb-4">
+                    <label for="login-email" class="block text-sm font-medium text-gray-600 mb-1">Email</label>
+                    <input type="email" id="login-email" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+                <div class="mb-6">
+                    <label for="login-password" class="block text-sm font-medium text-gray-600 mb-1">Password</label>
+                    <input type="password" id="login-password" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">Login</button>
+                <p class="text-center text-sm mt-4">
+                    Belum punya akun? <a href="#" id="show-register-link" class="text-blue-500 hover:underline">Daftar di sini</a>
+                </p>
+            </form>
+
+            <!-- Register Form (Initially Hidden) -->
+            <form id="register-form" class="hidden">
+                <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Register</h2>
+                <div class="mb-4">
+                    <label for="register-username" class="block text-sm font-medium text-gray-600 mb-1">Username</label>
+                    <input type="text" id="register-username" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+                <div class="mb-4">
+                    <label for="register-email" class="block text-sm font-medium text-gray-600 mb-1">Email</label>
+                    <input type="email" id="register-email" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+                <div class="mb-4">
+                    <label for="register-password" class="block text-sm font-medium text-gray-600 mb-1">Password</label>
+                    <input type="password" id="register-password" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+                <button type="submit" class="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition">Register</button>
+                <p class="text-center text-sm mt-4">
+                    Sudah punya akun? <a href="#" id="show-login-link" class="text-blue-500 hover:underline">Login di sini</a>
+                </p>
+            </form>
+             <p id="auth-error" class="text-red-500 text-sm mt-4 text-center"></p>
+        </div>
+    </div>
+    
+    <!-- Upload Modal -->
+    <div id="upload-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+            <form id="upload-form">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Upload Reel</h2>
+                    <button type="button" id="close-upload-modal-btn"><i data-lucide="x"></i></button>
+                </div>
+                <div class="mb-4">
+                    <label for="upload-video" class="block text-sm font-medium text-gray-600 mb-2">Video File</label>
+                    <input type="file" id="upload-video" accept="video/*" required class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                </div>
+                <div class="mb-6">
+                    <label for="upload-caption" class="block text-sm font-medium text-gray-600 mb-1">Caption</label>
+                    <textarea id="upload-caption" rows="3" placeholder="Tulis caption..." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">Upload</button>
+                <p id="upload-status" class="text-center mt-4"></p>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="function.js"></script>
+
+    <!-- Lucide Icons init -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
