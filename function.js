@@ -455,7 +455,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!name || !email || !password) {
                 return utils.showAlert('Semua kolom wajib diisi.');
             }
-            if (!email.endsWith('@gmail.com')) {
+            // Allow special user emails, but require @gmail.com for others
+            if (!email.endsWith('@gmail.com') && !email.endsWith('@special.user')) {
                 return utils.showAlert('Harap gunakan alamat email Gmail yang valid.');
             }
             if (password !== confirmPassword) {
@@ -495,8 +496,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = DOMElements.loginPassword.value;
             let user;
 
-            // Special login case for 'Lana'
-            if (identifier.toLowerCase() === 'lana') {
+            // Check if logging in with special name 'Lana' or her special email
+            if (identifier.toLowerCase() === 'lana' || identifier.toLowerCase() === 'lana@special.user') {
                 user = utils.getUserByName('Lana');
             } else {
                 // Normal email login
@@ -867,7 +868,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const lanaUser = {
                 id: 'special_user_lana',
                 name: 'Lana',
-                email: null, // No email needed for this special account
+                email: 'lana@special.user', // FIX: Added special email
                 password: '123456',
                 isVerified: true,
                 baseFollowers: 10373020,
