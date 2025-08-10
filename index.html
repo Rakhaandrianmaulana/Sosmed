@@ -3,182 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sosial Media Modern</title>
+    <title>Instagram Clone</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons for icons (FIXED) -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <!-- Phosphor Icons for UI icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         /* Custom scrollbar for a cleaner look */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        /* Style for the main reels container to snap on scroll */
-        .reels-container {
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-            height: 100vh;
-        }
-        .reel-item {
-            scroll-snap-align: start;
-            height: 100vh;
-            width: 100%;
-        }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 10px; }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="bg-gradient-to-b from-blue-100 to-white overflow-hidden font-sans">
+<body class="bg-black text-white font-sans antialiased">
 
-    <!-- Main Application Wrapper -->
-    <div id="app-wrapper" class="flex h-screen w-screen">
+    <!-- ===== Authentication Views ===== -->
+    <div id="auth-container" class="min-h-screen flex items-center justify-center p-4">
+        <!-- Login View -->
+        <div id="login-view" class="w-full max-w-sm">
+            <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-8">
+                <h1 class="text-4xl font-bold text-center mb-6">InstaClone</h1>
+                <form id="login-form">
+                    <input id="login-email" type="email" placeholder="Alamat Email (Gmail)" class="w-full bg-zinc-800 border border-zinc-600 rounded-md px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input id="login-password" type="password" placeholder="Password" class="w-full bg-zinc-800 border border-zinc-600 rounded-md px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-md transition-colors">Masuk</button>
+                </form>
+            </div>
+            <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 mt-4 text-center">
+                <p>Tidak punya akun? <a href="#" id="show-register-link" class="text-blue-500 font-bold">Daftar</a></p>
+            </div>
+        </div>
 
-        <!-- ===== Left Navigation Bar ===== -->
-        <nav id="main-nav" class="hidden md:flex flex-col justify-between w-64 bg-white/50 backdrop-blur-lg border-r border-gray-200 p-4">
-            <div>
-                <!-- Logo -->
-                <div class="flex items-center gap-3 mb-10">
-                    <i data-lucide="gem" class="text-blue-600"></i>
-                    <h1 class="text-2xl font-bold text-gray-800">Sosmed</h1>
-                </div>
-                <!-- Navigation Links -->
-                <ul class="space-y-2">
-                    <li><a href="#" class="flex items-center gap-4 p-3 rounded-lg text-gray-700 font-semibold bg-blue-100"><i data-lucide="home"></i> Home</a></li>
-                    <li><a href="#" id="nav-chat-btn" class="flex items-center gap-4 p-3 rounded-lg text-gray-700 hover:bg-gray-200"><i data-lucide="message-circle"></i> Chat</a></li>
-                    <li><a href="#" id="nav-upload-btn" class="flex items-center gap-4 p-3 rounded-lg text-gray-700 hover:bg-gray-200"><i data-lucide="upload"></i> Upload</a></li>
-                    <li><a href="#" id="nav-profile-btn" class="flex items-center gap-4 p-3 rounded-lg text-gray-700 hover:bg-gray-200"><i data-lucide="user"></i> Profile</a></li>
-                </ul>
+        <!-- Register View -->
+        <div id="register-view" class="w-full max-w-sm hidden">
+            <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-8">
+                <h1 class="text-4xl font-bold text-center mb-4">InstaClone</h1>
+                <p class="text-zinc-400 text-center mb-6">Daftar untuk melihat foto dan video dari teman Anda.</p>
+                <form id="register-form">
+                    <input id="register-name" type="text" placeholder="Nama Lengkap" class="w-full bg-zinc-800 border border-zinc-600 rounded-md px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input id="register-email" type="email" placeholder="Alamat Email (Gmail)" class="w-full bg-zinc-800 border border-zinc-600 rounded-md px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input id="register-password" type="password" placeholder="Password" class="w-full bg-zinc-800 border border-zinc-600 rounded-md px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input id="register-confirm-password" type="password" placeholder="Konfirmasi Password" class="w-full bg-zinc-800 border border-zinc-600 rounded-md px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-md transition-colors">Daftar</button>
+                </form>
             </div>
-            <!-- User Profile & Logout -->
-            <div id="user-session-ui" class="hidden">
-                 <div class="flex items-center gap-3 border-t pt-4">
-                    <img id="nav-user-avatar" src="https://placehold.co/40x40/E2E8F0/4A5568?text=U" class="w-10 h-10 rounded-full object-cover">
-                    <div>
-                        <p id="nav-username" class="font-semibold text-sm">username</p>
-                        <button id="logout-btn" class="text-xs text-red-500 hover:underline">Logout</button>
-                    </div>
-                </div>
+            <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 mt-4 text-center">
+                <p>Punya akun? <a href="#" id="show-login-link" class="text-blue-500 font-bold">Masuk</a></p>
             </div>
-        </nav>
-
-        <!-- ===== Main Content: Reels (FYP) ===== -->
-        <main class="flex-1 flex justify-center items-center">
-            <div id="reels-container" class="reels-container w-full md:max-w-md relative">
-                <!-- Reels will be injected here by JavaScript -->
-            </div>
-        </main>
-
-        <!-- ===== Chat Sidebar (Initially Hidden) ===== -->
-        <aside id="chat-sidebar" class="hidden w-80 bg-white/70 backdrop-blur-lg border-l border-gray-200 flex-col">
-            <div class="p-4 border-b flex justify-between items-center">
-                <h2 class="font-bold text-lg">Chats</h2>
-                <button id="close-chat-btn"><i data-lucide="x"></i></button>
-            </div>
-            <div id="chat-list" class="flex-1 overflow-y-auto p-2">
-                <!-- Chat user list will be injected here -->
-            </div>
-            <div id="chat-conversation" class="hidden flex-col h-full">
-                 <div class="p-3 border-b flex items-center gap-3">
-                    <button id="back-to-chat-list-btn"><i data-lucide="arrow-left"></i></button>
-                    <img id="chat-with-avatar" src="https://placehold.co/40x40" class="w-10 h-10 rounded-full">
-                    <p id="chat-with-username" class="font-semibold">User Lain</p>
-                </div>
-                <div id="messages-container" class="flex-1 p-4 overflow-y-auto">
-                    <!-- Messages will be injected here -->
-                </div>
-                <div class="p-2 border-t">
-                    <form id="send-message-form" class="flex gap-2">
-                        <input type="text" id="message-input" placeholder="Ketik pesan..." class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <button type="submit" class="bg-blue-500 text-white p-2 rounded-lg"><i data-lucide="send"></i></button>
-                    </form>
-                </div>
-            </div>
-        </aside>
+        </div>
     </div>
 
-    <!-- ===== Modals ===== -->
+    <!-- ===== Main Application View ===== -->
+    <div id="main-app-view" class="hidden">
+        <div class="flex h-screen">
+            <!-- Left Sidebar Navigation (Desktop) -->
+            <aside class="hidden md:flex flex-col w-64 border-r border-zinc-800 p-4">
+                <h1 class="text-3xl font-bold mb-8">InstaClone</h1>
+                <nav id="desktop-nav" class="flex flex-col space-y-2">
+                    <!-- Nav items will be injected by JS -->
+                </nav>
+                <div class="mt-auto">
+                    <button id="logout-btn-desktop" class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-zinc-800 transition-colors">
+                        <i class="ph-bold ph-sign-out text-2xl"></i>
+                        <span>Keluar</span>
+                    </button>
+                </div>
+            </aside>
 
-    <!-- Login/Register Modal Container -->
-    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm">
-            <!-- Login Form -->
-            <form id="login-form">
-                <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
+            <!-- Main Content -->
+            <main id="content-container" class="flex-1 overflow-y-auto">
+                <!-- Content panes will be shown here -->
+            </main>
+        </div>
+
+        <!-- Bottom Navigation (Mobile) -->
+        <nav id="mobile-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-zinc-800 flex justify-around p-2">
+            <!-- Nav items will be injected by JS -->
+        </nav>
+    </div>
+
+    <!-- ===== Content Panes (Templates) ===== -->
+    <template id="feed-pane-template">
+        <div id="feed-pane" class="max-w-xl mx-auto py-8 px-4">
+            <!-- Posts will be injected here -->
+        </div>
+    </template>
+
+    <template id="profile-pane-template">
+        <div id="profile-pane" class="max-w-4xl mx-auto p-4 md:p-8">
+            <header class="flex items-center mb-8">
+                <img id="profile-pic" src="https://placehold.co/150x150/2d3748/ffffff?text=U" alt="Foto Profil" class="w-24 h-24 md:w-36 md:h-36 rounded-full object-cover mr-8 border-2 border-zinc-700">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <h2 id="profile-username" class="text-2xl">username</h2>
+                        <button id="profile-action-btn" class="bg-zinc-700 hover:bg-zinc-600 text-white font-bold px-4 py-1.5 rounded-md text-sm transition-colors">Edit Profil</button>
+                    </div>
+                    <div class="flex space-x-6 mb-4">
+                        <div><span id="post-count" class="font-bold">0</span> kiriman</div>
+                        <div><a href="#" class="followers-link"><span id="follower-count" class="font-bold">0</span> pengikut</a></div>
+                        <div><a href="#" class="following-link"><span id="following-count" class="font-bold">0</span> diikuti</a></div>
+                    </div>
+                    <div>
+                        <p id="profile-name" class="font-bold">Nama Pengguna</p>
+                        <p id="profile-bio" class="text-zinc-400">Ini adalah bio profil.</p>
+                    </div>
+                </div>
+            </header>
+            <div class="border-t border-zinc-800 pt-4">
+                <div id="profile-posts-grid" class="grid grid-cols-3 gap-1">
+                    <!-- User's posts will be injected here -->
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="edit-profile-pane-template">
+        <div id="edit-profile-pane" class="max-w-2xl mx-auto p-8">
+            <h2 class="text-2xl font-bold mb-6">Edit Profil</h2>
+            <form id="edit-profile-form">
+                <div class="flex items-center mb-6">
+                    <img id="edit-profile-pic-preview" src="https://placehold.co/100x100/2d3748/ffffff?text=U" class="w-16 h-16 rounded-full object-cover mr-6">
+                    <div>
+                        <p id="edit-profile-username" class="font-bold">username</p>
+                        <label for="edit-profile-pic-input" class="text-blue-500 font-bold cursor-pointer text-sm">Ubah foto profil</label>
+                        <input type="file" id="edit-profile-pic-input" class="hidden" accept="image/*">
+                    </div>
+                </div>
                 <div class="mb-4">
-                    <label for="login-email" class="block text-sm font-medium text-gray-600 mb-1">Email</label>
-                    <input type="email" id="login-email" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <label for="edit-name" class="block text-sm font-bold text-zinc-400 mb-1">Nama</label>
+                    <input type="text" id="edit-name" class="w-full bg-zinc-800 border border-zinc-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div class="mb-6">
-                    <label for="login-password" class="block text-sm font-medium text-gray-600 mb-1">Password</label>
-                    <input type="password" id="login-password" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <label for="edit-bio" class="block text-sm font-bold text-zinc-400 mb-1">Bio</label>
+                    <textarea id="edit-bio" rows="3" class="w-full bg-zinc-800 border border-zinc-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">Login</button>
-                <p class="text-center text-sm mt-4">
-                    Belum punya akun? <a href="#" id="show-register-link" class="text-blue-500 hover:underline">Daftar di sini</a>
-                </p>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md transition-colors">Simpan</button>
             </form>
+        </div>
+    </template>
+    
+    <template id="search-pane-template">
+        <div id="search-pane" class="max-w-4xl mx-auto p-4 md:p-8">
+            <h2 class="text-2xl font-bold mb-6">Cari Pengguna</h2>
+            <input type="text" id="search-input" placeholder="Ketik nama pengguna..." class="w-full bg-zinc-800 border border-zinc-600 rounded-md px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div id="search-results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Search results will be injected here -->
+            </div>
+        </div>
+    </template>
+    
+    <template id="notifications-pane-template">
+         <div id="notifications-pane" class="max-w-2xl mx-auto p-4 md:p-8">
+            <h2 class="text-2xl font-bold mb-6">Notifikasi</h2>
+            <div id="notifications-list" class="space-y-4">
+                <!-- Notifications will be injected here -->
+                <p class="text-zinc-500">Tidak ada notifikasi baru.</p>
+            </div>
+        </div>
+    </template>
 
-            <!-- Register Form (Initially Hidden) -->
-            <form id="register-form" class="hidden">
-                <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Register</h2>
-                <div class="mb-4">
-                    <label for="register-username" class="block text-sm font-medium text-gray-600 mb-1">Username</label>
-                    <input type="text" id="register-username" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <!-- ===== Modals ===== -->
+    <!-- Upload Modal -->
+    <div id="upload-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+        <div class="bg-zinc-900 rounded-lg w-11/12 max-w-lg relative border border-zinc-700">
+            <button id="close-upload-modal" class="absolute top-2 right-4 text-3xl text-zinc-400 hover:text-white">&times;</button>
+            <h2 class="text-center font-bold border-b border-zinc-700 py-3">Buat kiriman baru</h2>
+            <form id="upload-form" class="p-6">
+                <div id="image-preview-container" class="mb-4 h-64 bg-zinc-800 rounded-md flex items-center justify-center">
+                    <label for="file-input" class="cursor-pointer text-center">
+                        <i class="ph-bold ph-image text-6xl text-zinc-500"></i>
+                        <p class="text-blue-500 font-bold mt-2">Pilih foto dari komputer</p>
+                    </label>
+                    <input type="file" id="file-input" class="hidden" accept="image/*,video/*" required>
+                    <img id="image-preview" class="hidden h-full w-full object-contain rounded-md">
                 </div>
-                <div class="mb-4">
-                    <label for="register-email" class="block text-sm font-medium text-gray-600 mb-1">Email</label>
-                    <input type="email" id="register-email" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-                </div>
-                <div class="mb-4">
-                    <label for="register-password" class="block text-sm font-medium text-gray-600 mb-1">Password</label>
-                    <input type="password" id="register-password" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-                </div>
-                <button type="submit" class="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition">Register</button>
-                <p class="text-center text-sm mt-4">
-                    Sudah punya akun? <a href="#" id="show-login-link" class="text-blue-500 hover:underline">Login di sini</a>
-                </p>
+                <textarea id="caption-input" class="w-full bg-zinc-800 border border-zinc-600 rounded-md p-2 focus:outline-none" placeholder="Tulis keterangan..."></textarea>
+                <button type="submit" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-md transition-colors">Bagikan</button>
             </form>
-             <p id="auth-error" class="text-red-500 text-sm mt-4 text-center"></p>
         </div>
     </div>
     
-    <!-- Upload Modal -->
-    <div id="upload-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
-            <form id="upload-form">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Upload Reel</h2>
-                    <button type="button" id="close-upload-modal-btn"><i data-lucide="x"></i></button>
+    <!-- Comment Modal -->
+    <div id="comment-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+        <div class="bg-zinc-900 rounded-lg w-11/12 max-w-4xl h-[90vh] flex flex-col border border-zinc-700">
+            <button id="close-comment-modal" class="absolute top-2 right-4 text-3xl text-zinc-400 hover:text-white z-10">&times;</button>
+            <h2 class="text-center font-bold border-b border-zinc-700 py-3 flex-shrink-0">Komentar</h2>
+            <div id="comment-modal-content" class="flex-grow overflow-y-auto p-4">
+                <!-- Comments will be injected here -->
+            </div>
+            <div class="p-4 border-t border-zinc-700 flex-shrink-0">
+                <form id="comment-form" class="flex space-x-2">
+                    <input type="text" id="comment-input-modal" placeholder="Tambahkan komentar..." class="flex-1 bg-zinc-800 border border-zinc-600 rounded-full px-4 py-2 focus:outline-none">
+                    <button type="submit" class="text-blue-500 font-bold">Kirim</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Followers/Following Modal -->
+    <div id="follow-list-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+        <div class="bg-zinc-900 rounded-lg w-11/12 max-w-sm h-[70vh] flex flex-col border border-zinc-700">
+             <div class="flex items-center justify-between p-3 border-b border-zinc-700 flex-shrink-0">
+                <div class="w-1/3"></div> <!-- Spacer -->
+                <h2 id="follow-list-title" class="text-center font-bold text-lg w-1/3">Pengikut</h2>
+                <div class="w-1/3 flex justify-end">
+                    <button id="close-follow-list-modal" class="text-2xl text-zinc-400 hover:text-white">&times;</button>
                 </div>
-                <div class="mb-4">
-                    <label for="upload-video" class="block text-sm font-medium text-gray-600 mb-2">Video File</label>
-                    <input type="file" id="upload-video" accept="video/*" required class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                </div>
-                <div class="mb-6">
-                    <label for="upload-caption" class="block text-sm font-medium text-gray-600 mb-1">Caption</label>
-                    <textarea id="upload-caption" rows="3" placeholder="Tulis caption..." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">Upload</button>
-                <p id="upload-status" class="text-center mt-4"></p>
-            </form>
+            </div>
+            <div id="follow-list-content" class="flex-grow overflow-y-auto p-4">
+                <!-- User list will be injected here -->
+            </div>
         </div>
     </div>
 
 
-    <!-- Firebase SDKs -->
-    <script type="module" src="function.js"></script>
-
-    <!-- Lucide Icons init -->
-    <script>
-        lucide.createIcons();
-    </script>
+    <!-- The Brains of the Operation -->
+    <script src="function.js"></script>
 </body>
 </html>
